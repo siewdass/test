@@ -1,0 +1,59 @@
+networks:
+  360feedback:
+    driver: bridge
+
+volumes:
+  mongodb:
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:6.0.8
+    networks:
+      - 360feedback
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+    logging:
+      driver: none
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  frontend:
+    container_name: frontend
+    ports:
+      - 4001:4001
+    image: node:20.11.0
+    working_dir: /app
+    user: node
+    networks:
+      - 360feedback
+    volumes:
+      - ./frontend:/app
+    command: sh -c "yarn install && yarn dev"
+    environment:
+      EXPRESS_PORT: 4001
+
+  backend:
+    container_name: backend
+    ports:
+      - 4002:4002
+    image: node:20.11.0
+    working_dir: /app
+    user: node
+    networks:
+      - 360feedback
+    volumes:
+      - ./backend:/app
+    command: sh -c "yarn install && yarn dev"
+    environment:
+      EXPRESS_ORIGIN: '*'
+      EXPRESS_PORT: 4002
+      EXPRESS_JWT: jd3982jd892jd8j23d23d32
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+      MONGODB_DATABASE: 360feedback
