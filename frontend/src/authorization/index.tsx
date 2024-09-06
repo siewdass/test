@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import { useForm } from '../services/form'
+import { Request } from '../services/request'
 
 import { Button } from 'primereact/button'
 import { Input } from '../components/input'
@@ -33,18 +35,18 @@ export const Authorization = ( ) => {
 	} )
 
 	useEffect( ( ) => {
-		form.reset({})
-		console.log('sss')
+		form.reset( { email: '', password: '', 'repeat password': '' } )
 	}, [ signInOrUp ] )
 
 	const signedIn = ( data ) => {
 		//setSignInOrUp( false )
 		//enviar al backend
-		console.log( data )
-	}	
+		console.log( '1', data )
+	}
 
 	const signedUp = ( data ) => {
-		navigate( '/home' )
+		//navigate( '/home' )
+		console.log( '2', data )
 	}	
 
 	return (
