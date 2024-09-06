@@ -3,9 +3,7 @@ import { compare } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { User } from './model'
 
-export const HTTP = '/signin'
-
-export default async function SignIn( req: Request, res: Response ) {
+export async function SignIn( req: Request, res: Response ) {
 	try {
 
 		const { email, password } = req.body
@@ -13,14 +11,14 @@ export default async function SignIn( req: Request, res: Response ) {
 		if ( !email || !password ) return res.status( 400 ).json( { message: 'Email and password are required.', error: true } )
 		
 		const user = await User.findOne( { email } )
-		if ( !user ) return res.status( 404 ).json( { message: 'User not found.' } )
+		if ( !user ) return res.status( 404 ).json( { message: 'User not found.', error: true } )
 
 		const isMatch = await compare( password, user.password )
-		if ( !isMatch ) return res.status( 401 ).json( { message: 'Invalid email or password.' } )
+		if ( !isMatch ) return res.status( 401 ).json( { message: 'Invalid email or password.', error: true } )
 		
-		const token = sign( { email: user.email }, process.env.EXPRESS_JWT, { expiresIn: '24h' } )
+		const token = sign( { email }, process.env.EXPRESS_JWT, { expiresIn: '24h' } )
 
-		res.json( { message: 'Successful', error: false, data: { name: user.name, email: user.email, token } } )
+		res.json( { message: 'Successful', error: false, data: { email, token } } )
 
 	} catch ( error ) {
 

@@ -1,5 +1,6 @@
 import { Device } from '../services/device'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Toast } from '../services/toast'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse, faRightFromBracket, faChartSimple, faUsers, faRectangleList } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +17,12 @@ export const Navigation = ( ) => {
 		{ name: 'Istanbul', icon: faHouse, path: '/2' },
 		{ name: 'Paris', icon: faHouse, path: '/3' },
 	]
+
+	const logout = ( ) => {
+		localStorage.clear( )
+		Toast( 'sucesss', 'Logout', 'Clearing session.' )
+		navigate( '/authorization' )
+	}
 
 	return (
 		<div style={ { display: 'flex', flexDirection: 'column', height: '100dvh', background: '#367fa9', width: isMobile ? 65 : 250, padding: 5, color: '#f6f6f6' } }>
@@ -44,7 +51,7 @@ export const Navigation = ( ) => {
 
 			<div style={ { flexGrow: 1 } } />
 			
-			<div style={ { display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'center' } }>
+			<div style={ { display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'center' } } onClick={ logout }>
 				<FontAwesomeIcon icon={ faRightFromBracket } size='lg' style={ { paddingBottom: isMobile ? 30 : 0, cursor: 'pointer' } } />
 				{ !isMobile && <h4>Logout</h4> }
 			</div>

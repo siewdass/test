@@ -13,6 +13,13 @@
   docker compose up
 ```
 
+## Credentials
+
+```
+  email: admin@360feedback.com
+  password: 360feedback
+```
+
 ## URL
 
 ```

@@ -16,7 +16,17 @@
   \*********************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst express_1 = __importDefault(__webpack_require__(/*! express */ \"express\"));\nconst mongoose_1 = __webpack_require__(/*! mongoose */ \"mongoose\");\nconst dotenv_1 = __webpack_require__(/*! dotenv */ \"dotenv\");\nconst seed_1 = __webpack_require__(/*! ./user/seed */ \"./src/user/seed.ts\");\n(0, dotenv_1.config)();\nconst { EXPRESS_ORIGIN, EXPRESS_PORT, MONGODB_HOST, MONGODB_PORT, MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_DATABASE } = process.env;\nconst app = (0, express_1.default)();\napp.use(express_1.default.json());\napp.use((req, res, next) => {\n    res.set({\n        'Access-Control-Allow-Origin': [EXPRESS_ORIGIN],\n        'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE',\n        'Access-Control-Allow-Headers': 'Content-Type'\n    });\n    next();\n});\napp.get('/', (req, res) => {\n    res.send('Hello World!');\n});\n(0, mongoose_1.connect)(`mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=admin`).then(() => {\n    (0, seed_1.SeedAdmin)();\n});\napp.listen(EXPRESS_PORT);\n\n\n//# sourceURL=webpack://backend/./src/main.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst express_1 = __importDefault(__webpack_require__(/*! express */ \"express\"));\nconst mongoose_1 = __webpack_require__(/*! mongoose */ \"mongoose\");\nconst dotenv_1 = __webpack_require__(/*! dotenv */ \"dotenv\");\nconst seed_1 = __webpack_require__(/*! ./user/seed */ \"./src/user/seed.ts\");\nconst signup_1 = __webpack_require__(/*! ./user/signup */ \"./src/user/signup.ts\");\nconst signin_1 = __webpack_require__(/*! ./user/signin */ \"./src/user/signin.ts\");\nconst getUsers_1 = __webpack_require__(/*! ./user/getUsers */ \"./src/user/getUsers.ts\");\n(0, dotenv_1.config)();\nconst { EXPRESS_ORIGIN, EXPRESS_PORT, MONGODB_HOST, MONGODB_PORT, MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_DATABASE } = process.env;\nconst app = (0, express_1.default)();\napp.use(express_1.default.json());\napp.use((req, res, next) => {\n    res.set({\n        'Access-Control-Allow-Origin': [EXPRESS_ORIGIN],\n        'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE',\n        'Access-Control-Allow-Headers': 'Content-Type, Authorization'\n    });\n    next();\n});\napp.get('/', (req, res) => res.send('360 Feedback!'));\napp.post('/signup', signup_1.SignUp);\napp.post('/signin', signin_1.SignIn);\napp.get('/users', getUsers_1.getUsers);\n(0, mongoose_1.connect)(`mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}?authSource=admin`).then(() => {\n    (0, seed_1.SeedAdmin)();\n});\napp.listen(EXPRESS_PORT);\n\n\n//# sourceURL=webpack://backend/./src/main.ts?");
+
+/***/ }),
+
+/***/ "./src/user/getUsers.ts":
+/*!******************************!*\
+  !*** ./src/user/getUsers.ts ***!
+  \******************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.getUsers = getUsers;\nconst model_1 = __webpack_require__(/*! ./model */ \"./src/user/model.ts\");\nfunction getUsers(req, res) {\n    return __awaiter(this, void 0, void 0, function* () {\n        try {\n            const data = model_1.User.find({});\n            res.status(201).json({ message: '', error: false, data });\n        }\n        catch (error) {\n        }\n    });\n}\n\n\n//# sourceURL=webpack://backend/./src/user/getUsers.ts?");
 
 /***/ }),
 
@@ -26,7 +36,7 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
   \***************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.User = void 0;\nconst mongoose_1 = __webpack_require__(/*! mongoose */ \"mongoose\");\nconst schema = new mongoose_1.Schema({\n    name: { type: String, required: true, maxlength: 50 },\n    email: { type: String, required: true, unique: true, maxlength: 255 },\n    password: { type: String, required: true },\n    role: { type: Number, default: 2 },\n    timestamp: { type: Date, default: Date.now }\n});\nexports.User = mongoose_1.models['User'] || (0, mongoose_1.model)('User', schema);\n\n\n//# sourceURL=webpack://backend/./src/user/model.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.User = void 0;\nconst mongoose_1 = __webpack_require__(/*! mongoose */ \"mongoose\");\nconst schema = new mongoose_1.Schema({\n    email: { type: String, required: true, unique: true, maxlength: 255 },\n    password: { type: String, required: true },\n    role: { type: Number, default: 2 },\n    timestamp: { type: Date, default: Date.now }\n});\nexports.User = mongoose_1.models['User'] || (0, mongoose_1.model)('User', schema);\n\n\n//# sourceURL=webpack://backend/./src/user/model.ts?");
 
 /***/ }),
 
@@ -37,6 +47,26 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.SeedAdmin = SeedAdmin;\nconst bcrypt_1 = __webpack_require__(/*! bcrypt */ \"bcrypt\");\nconst model_1 = __webpack_require__(/*! ./model */ \"./src/user/model.ts\");\nfunction SeedAdmin() {\n    return __awaiter(this, void 0, void 0, function* () {\n        const index = yield model_1.User.findOne({ email: 'admin@360feedback.com' });\n        if (!index)\n            yield model_1.User.create({\n                name: 'ADMIN',\n                email: 'admin@360feedback.com',\n                role: 0,\n                password: yield (0, bcrypt_1.hash)('360feedback', 10)\n            });\n    });\n}\n\n\n//# sourceURL=webpack://backend/./src/user/seed.ts?");
+
+/***/ }),
+
+/***/ "./src/user/signin.ts":
+/*!****************************!*\
+  !*** ./src/user/signin.ts ***!
+  \****************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.SignIn = SignIn;\nconst bcrypt_1 = __webpack_require__(/*! bcrypt */ \"bcrypt\");\nconst jsonwebtoken_1 = __webpack_require__(/*! jsonwebtoken */ \"jsonwebtoken\");\nconst model_1 = __webpack_require__(/*! ./model */ \"./src/user/model.ts\");\nfunction SignIn(req, res) {\n    return __awaiter(this, void 0, void 0, function* () {\n        try {\n            const { email, password } = req.body;\n            if (!email || !password)\n                return res.status(400).json({ message: 'Email and password are required.', error: true });\n            const user = yield model_1.User.findOne({ email });\n            if (!user)\n                return res.status(404).json({ message: 'User not found.', error: true });\n            const isMatch = yield (0, bcrypt_1.compare)(password, user.password);\n            if (!isMatch)\n                return res.status(401).json({ message: 'Invalid email or password.', error: true });\n            const token = (0, jsonwebtoken_1.sign)({ email }, process.env.EXPRESS_JWT, { expiresIn: '24h' });\n            res.json({ message: 'Successful', error: false, data: { email, token } });\n        }\n        catch (error) {\n            if (error instanceof Error) {\n                res.status(500).json({ message: error.message, error: true });\n            }\n            else {\n                res.status(500).json({ message: 'An unknown error occurred', error: true });\n            }\n        }\n    });\n}\n\n\n//# sourceURL=webpack://backend/./src/user/signin.ts?");
+
+/***/ }),
+
+/***/ "./src/user/signup.ts":
+/*!****************************!*\
+  !*** ./src/user/signup.ts ***!
+  \****************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.SignUp = SignUp;\nconst bcrypt_1 = __webpack_require__(/*! bcrypt */ \"bcrypt\");\nconst model_1 = __webpack_require__(/*! ./model */ \"./src/user/model.ts\");\nfunction SignUp(req, res) {\n    return __awaiter(this, void 0, void 0, function* () {\n        try {\n            const { email, password } = req.body;\n            if (!email || !password)\n                return res.status(400).json({ message: 'Missing required fields', error: true });\n            const index = yield model_1.User.findOne({ email });\n            if (index)\n                return res.status(409).json({ message: 'Email already exists', error: true });\n            yield model_1.User.create({ email, password: yield (0, bcrypt_1.hash)(password, 10) });\n            res.status(201).json({ message: 'Sign up successful', error: false });\n        }\n        catch (error) {\n            if (error instanceof Error) {\n                res.status(500).json({ message: error.message, error: true });\n            }\n            else {\n                res.status(500).json({ message: 'An unknown error occurred', error: true });\n            }\n        }\n    });\n}\n\n\n//# sourceURL=webpack://backend/./src/user/signup.ts?");
 
 /***/ }),
 
@@ -67,6 +97,16 @@ module.exports = require("dotenv");
 /***/ ((module) => {
 
 module.exports = require("express");
+
+/***/ }),
+
+/***/ "jsonwebtoken":
+/*!*******************************!*\
+  !*** external "jsonwebtoken" ***!
+  \*******************************/
+/***/ ((module) => {
+
+module.exports = require("jsonwebtoken");
 
 /***/ }),
 
@@ -141,7 +181,7 @@ module.exports = require("mongoose");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("c94ce75619642ce89e7d")
+/******/ 		__webpack_require__.h = () => ("1b505edb0c8aaaaa0d94")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

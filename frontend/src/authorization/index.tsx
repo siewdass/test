@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useForm } from '../services/form'
 import { Request } from '../services/request'
+import { Toast } from '../services/toast'
 
 import { Button } from 'primereact/button'
 import { Input } from '../components/input'
@@ -38,15 +39,24 @@ export const Authorization = ( ) => {
 		form.reset( { email: '', password: '', 'repeat password': '' } )
 	}, [ signInOrUp ] )
 
-	const signedIn = ( data ) => {
-		//setSignInOrUp( false )
-		//enviar al backend
-		console.log( '1', data )
+	const signedIn = async ( data ) => {
+		const res = await Request( '/signin', 'POST', data )
+		Toast( 'sucesss', 'Sign In', res.message )
+		console.log( res )
+		if ( !res.error ) {
+			localStorage.setItem( 'token', res.token )
+			setTimeout( () => {
+				navigate( '/users' )
+			}, 2000 )
+		}
 	}
 
-	const signedUp = ( data ) => {
-		//navigate( '/home' )
-		console.log( '2', data )
+	const signedUp = async ( data ) => {
+		const res = await Request( '/signup', 'POST', data )
+		if ( !res.error ) {
+			Toast( 'sucesss', 'Sign Up', res.message )
+			setSignInOrUp( !signInOrUp )
+		}
 	}	
 
 	return (
@@ -65,7 +75,7 @@ export const Authorization = ( ) => {
 
 				<p onClick={ ( ) => setSignInOrUp( !signInOrUp ) } style={ { color: '#367fa9', fontWeight: 'bold', cursor: 'pointer' } }>{ `${ signInOrUp ? 'Already' : 'Doesnt' } have an account?` }</p>
 
-				<Button label='Submit' onClick={ onSubmit( signInOrUp ? signedIn : signedUp ) } style={ { width: '100%', background: '#367fa9' } } />
+				<Button label='Submit' onClick={ onSubmit( signInOrUp ? signedUp : signedIn ) } style={ { width: '100%', background: '#367fa9' } } />
 			</div>
 
 		</div>

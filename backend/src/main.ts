@@ -3,6 +3,10 @@ import { connect } from 'mongoose'
 import { config } from 'dotenv'
 
 import { SeedAdmin } from './user/seed'
+import { SignUp } from './user/signup'
+import { SignIn } from './user/signin'
+import { UserMiddleware } from './user/middleware'
+import { getUsers } from './user/getUsers'
 
 config( )
 
@@ -15,14 +19,17 @@ app.use( ( req: Request, res: Response, next: NextFunction ) => {
 	res.set( {
 		'Access-Control-Allow-Origin': [ EXPRESS_ORIGIN ],
 		'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE',
-		'Access-Control-Allow-Headers': 'Content-Type'
+		'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 	} )
 	next( )
 } )
 
-app.get( '/', ( req, res ) => {
-	res.send( 'Hello World!' )
-} )
+app.get( '/', ( req, res ) => res.send( '360 Feedback!' ) )
+app.post( '/signup', SignUp )
+app.post( '/signin', SignIn )
+
+//app.use( UserMiddleware )
+app.get( '/users', getUsers )
 
 connect( `mongodb://${ MONGODB_USERNAME }:${ MONGODB_PASSWORD }@${ MONGODB_HOST }:${ MONGODB_PORT }/${ MONGODB_DATABASE }?authSource=admin` ).then( ( ) => {
 	SeedAdmin( )

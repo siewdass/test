@@ -2,18 +2,16 @@ import { Request, Response } from 'express'
 import { hash } from 'bcrypt'
 import { User } from './model'
 
-export const HTTP = '/signup'
-
-export default async function SignUp( req: Request, res: Response ) {
+export async function SignUp( req: Request, res: Response ) {
 	try {
 
-		const { email, password, name } = req.body
-		if ( !email || !password || !name ) return res.status( 400 ).json( { message: 'Missing required fields', error: true } )
+		const { email, password } = req.body
+		if ( !email || !password ) return res.status( 400 ).json( { message: 'Missing required fields', error: true } )
 		
 		const index = await User.findOne( { email } )
 		if ( index ) return res.status( 409 ).json( { message: 'Email already exists', error: true } )
 	
-		await User.create( { name, email, password: await hash( password, 10 ) } )
+		await User.create( { email, password: await hash( password, 10 ) } )
 
 		res.status( 201 ).json( { message: 'Sign up successful', error: false } )
 
