@@ -14,8 +14,8 @@
 ```
 
 ## Screenshots
-![Desktop](http://github/siewdass/test/desktop.png)
-![Mobile](http://github/siewdass/test/mobile.png)
+![Desktop](https://github.com/siewdass/test/blob/main/desktop.png?raw=true)
+![Mobile](https://github.com/siewdass/test/blob/main/mobile.png?raw=true)
 
 ## URL
 
